@@ -12,8 +12,19 @@ class GetAllUsers extends UserState {
 }
 
 class GetUser extends UserState {
-  // final UserRepo userRepo;
   final User user;
 
   GetUser({required this.user});
+}
+
+class PostNewUser extends UserState {
+  final User newUser;
+
+  PostNewUser({required this.newUser});
+}
+
+class DeleteUser extends UserState {
+  final dynamic deleteUser;
+
+  DeleteUser({required this.deleteUser});
 }

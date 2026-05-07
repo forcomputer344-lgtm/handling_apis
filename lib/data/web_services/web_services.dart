@@ -4,7 +4,8 @@ import 'package:retrofit/retrofit.dart';
 
 part 'web_services.g.dart';
 
-@RestApi(baseUrl: 'https://gorest.co.in/public/v2/')
+// @RestApi(baseUrl: 'https://gorest.co.in/public/v2/') // we changed it cuz didnt work on Post & Delete
+@RestApi(baseUrl: 'https://gorest.in/public/v2/')
 abstract class WebServices {
   factory WebServices(Dio dio, {String? baseUrl}) = _WebServices;
 
@@ -14,6 +15,19 @@ abstract class WebServices {
   @GET('/users/{id}')
   Future<User> getUserById(@Path("id") int id);
   // @Path when it eptmies will use the parameter, so make sure the parameter name must be like it wrote by backend
+
+  @POST("users")
+  Future<User> createNewUser(
+    @Body() User newuser,
+    @Header('Authorization') String token,
+    @Header('Content-Type') String contentType,
+  );
+
+  @DELETE('/users/{id}')
+  Future<dynamic> deleteUser(
+    @Path() int id,
+    @Header('Authorization') String token,
+  );
 }
 
 Dio createAndSetupDio() {
