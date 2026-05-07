@@ -15,12 +15,23 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<User> usersList = [];
   User user = User();
+  dynamic deleteUser = 0;
 
   @override
   void initState() {
     super.initState();
     // BlocProvider.of<UserCubit>(context).emaitAllUsers();
-    BlocProvider.of<UserCubit>(context).emaitUser(8459541);
+    // BlocProvider.of<UserCubit>(context).emaitUser(8459541);
+    // BlocProvider.of<UserCubit>(context).emitCreateNewUser(
+    //   User(
+    //     id: 777,
+    //     name: "Yossef Ahmed",
+    //     email: "yossef_ahmed@stoltenberg.test",
+    //     gender: "male",
+    //     status: "active",
+    //   ),
+    // );
+    BlocProvider.of<UserCubit>(context).emitDeleteUser(1008);
   }
 
   @override
@@ -60,11 +71,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   user = (state).user;
                   return Column(
                     children: [
-                      Container(
-                        child: Text(
-                          "Get User",
-                          style: TextStyle(fontSize: 18, color: Colors.black),
-                        ),
+                      Text(
+                        "Get User",
+                        style: TextStyle(fontSize: 18, color: Colors.black),
                       ),
                       SizedBox(height: 20),
 
@@ -72,6 +81,54 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 50,
                         color: Colors.amber,
                         child: Center(child: Text(user.name.toString())),
+                      ),
+                    ],
+                  );
+                } else if (state is PostNewUser) {
+                  user = (state).newUser;
+                  return Column(
+                    children: [
+                      Text(
+                        "Post New User",
+                        style: TextStyle(fontSize: 18, color: Colors.black),
+                      ),
+                      SizedBox(height: 20),
+
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        color: Colors.amber,
+                        child: Center(
+                          child: Column(
+                            children: [
+                              Text(user.name.toString()),
+                              Text("\nEmail: ${user.email.toString()}"),
+                              Text("Gender: ${user.gender.toString()}"),
+                              Text("Status: ${user.status.toString()}"),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                if (state is DeleteUser) {
+                  deleteUser = (state).deleteUser;
+                  return Column(
+                    children: [
+                      Text(
+                        "Delete User",
+                        style: TextStyle(fontSize: 18, color: Colors.black),
+                      ),
+                      SizedBox(height: 20),
+
+                      Container(
+                        height: 50,
+                        color: Colors.amber,
+                        child: Center(
+                          child: Text(
+                            "delete it successfully${deleteUser.toString()}",
+                          ),
+                        ),
                       ),
                     ],
                   );
