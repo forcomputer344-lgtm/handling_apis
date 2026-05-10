@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:handling_apis/business_logic/cubit/user_cubit.dart';
+import 'package:handling_apis/business_logic/cubit/result_cubit.dart';
 import 'package:handling_apis/injection.dart';
 import 'package:handling_apis/presentation/screens/home_screen.dart';
 
@@ -19,8 +19,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: BlocProvider<UserCubit>(
-        create: (BuildContext context) => getIt<UserCubit>(),
+      home: BlocProvider<MyCubit>(
+        create: (BuildContext context) => getIt<MyCubit>(),
         child: HomeScreen(),
       ),
     );

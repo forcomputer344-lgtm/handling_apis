@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:handling_apis/business_logic/cubit/user_cubit.dart';
+import 'package:handling_apis/business_logic/cubit/result_cubit.dart';
 
-import 'package:handling_apis/business_logic/cubit/user_state.dart';
+import 'package:handling_apis/business_logic/cubit/result_state.dart';
+import 'package:handling_apis/core/networking/network_exceptions.dart';
 import 'package:handling_apis/data/model/user.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -20,18 +21,20 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // BlocProvider.of<UserCubit>(context).emaitAllUsers();
-    // BlocProvider.of<UserCubit>(context).emaitUser(8459541);
-    // BlocProvider.of<UserCubit>(context).emitCreateNewUser(
+
+    // BlocProvider.of<MyCubit>(context).emitCreateNewUser(
     //   User(
-    //     id: 777,
+    //     id: 771,
     //     name: "Yossef Ahmed",
     //     email: "yossef_ahmed@stoltenberg.test",
     //     gender: "male",
     //     status: "active",
     //   ),
     // );
-    BlocProvider.of<UserCubit>(context).emitDeleteUser(1008);
+
+    BlocProvider.of<MyCubit>(context).emitDeleteUser(1005);
+    // BlocProvider.of<MyCubit>(context).emitGetUserDetails(0);
+    BlocProvider.of<MyCubit>(context).emitGetAllUsers();
   }
 
   @override
@@ -41,102 +44,156 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            BlocBuilder<UserCubit, UserState>(
-              builder: (context, state) {
-                if (state is GetAllUsers) {
-                  usersList = (state).allUsersLists;
-                  return Column(
-                    children: [
-                      Text(
-                        "Get All Users",
-                        style: TextStyle(fontSize: 18, color: Colors.black),
-                      ),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        padding: const EdgeInsets.all(8),
-                        itemCount: usersList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            height: 50,
-                            color: Colors.amber,
-                            child: Center(
-                              child: Text(usersList[index].name.toString()),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  );
-                } else if (state is GetUser) {
-                  user = (state).user;
-                  return Column(
-                    children: [
-                      Text(
-                        "Get User",
-                        style: TextStyle(fontSize: 18, color: Colors.black),
-                      ),
-                      SizedBox(height: 20),
+            // frezzed
+            // BlocBuilder<MyCubit, ResultState<List<User>>>(
+            //   builder: (context, ResultState<List<User>> state) {
+            //     return state.when(
+            //       idle: () {
+            //         return const Center(child: CircularProgressIndicator());
+            //       },
+            //       loading: () {
+            //         return const Center(child: CircularProgressIndicator());
+            //       },
+            //       success: (List<User> userData) {
+            //         return Column(
+            //           children: [
+            //             Text(
+            //               "Get All Users",
+            //               style: TextStyle(fontSize: 18, color: Colors.black),
+            //             ),
+            //             ListView.builder(
+            //               shrinkWrap: true,
+            //               padding: const EdgeInsets.all(8),
+            //               itemCount: userData.length,
+            //               itemBuilder: (BuildContext context, int index) {
+            //                 return Container(
+            //                   height: 50,
+            //                   color: Colors.amber,
+            //                   child: Center(
+            //                     child: Text(userData[index].name.toString()),
+            //                   ),
+            //                 );
+            //               },
+            //             ),
+            //           ],
+            //         );
+            //       },
+            //       error: (NetworkExceptions error) {
+            //         return Center(
+            //           child: Text(
+            //             NetworkExceptions.getErrorMessage(error),
+            //             style: TextStyle(color: Colors.red, fontSize: 18),
+            //           ),
+            //         );
+            //       },
+            //     );
+            //   },
+            // ),
 
-                      Container(
-                        height: 50,
-                        color: Colors.amber,
-                        child: Center(child: Text(user.name.toString())),
-                      ),
-                    ],
-                  );
-                } else if (state is PostNewUser) {
-                  user = (state).newUser;
-                  return Column(
-                    children: [
-                      Text(
-                        "Post New User",
-                        style: TextStyle(fontSize: 18, color: Colors.black),
-                      ),
-                      SizedBox(height: 20),
+            // BlocBuilder<MyCubit, ResultState<User>>(
+            //   builder: (context, ResultState<User> state) {
+            //     return state.when(
+            //       idle: () {
+            //         return const Center(child: CircularProgressIndicator());
+            //       },
+            //       loading: () {
+            //         return const Center(child: CircularProgressIndicator());
+            //       },
+            //       success: (User userData) {
+            //         return Container(
+            //           height: 50,
+            //           color: Colors.red,
+            //           child: Center(
+            //             child: Text(
+            //               userData.email.toString(),
+            //               style: const TextStyle(color: Colors.white),
+            //             ),
+            //           ),
+            //         );
+            //       },
+            //       error: (NetworkExceptions error) {
+            //         return Center(
+            //           child: Text(
+            //             NetworkExceptions.getErrorMessage(error),
+            //             style: TextStyle(color: Colors.red, fontSize: 18),
+            //           ),
+            //         );
+            //       },
+            //     );
+            //   },
+            // ),
 
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        color: Colors.amber,
-                        child: Center(
-                          child: Column(
-                            children: [
-                              Text(user.name.toString()),
-                              Text("\nEmail: ${user.email.toString()}"),
-                              Text("Gender: ${user.gender.toString()}"),
-                              Text("Status: ${user.status.toString()}"),
-                            ],
-                          ),
+            BlocBuilder<MyCubit, ResultState<dynamic>>(
+              builder: (context, ResultState<dynamic> state) {
+                return state.when(
+                  idle: () {
+                    return const Center(child: CircularProgressIndicator());
+                  },
+                  loading: () {
+                    return const Center(child: CircularProgressIndicator());
+                  },
+                  success: (dynamic userData) {
+                    print(state);
+                    print(userData);
+                    return Container(
+                      height: 50,
+                      color: Colors.red,
+                      child: Center(
+                        child: Text(
+                          userData.toString(),
+                          style: const TextStyle(color: Colors.white),
                         ),
                       ),
-                    ],
-                  );
-                }
-                if (state is DeleteUser) {
-                  deleteUser = (state).deleteUser;
-                  return Column(
-                    children: [
-                      Text(
-                        "Delete User",
-                        style: TextStyle(fontSize: 18, color: Colors.black),
+                    );
+                  },
+                  error: (NetworkExceptions error) {
+                    return Center(
+                      child: Text(
+                        NetworkExceptions.getErrorMessage(error),
+                        style: TextStyle(color: Colors.red, fontSize: 18),
                       ),
-                      SizedBox(height: 20),
-
-                      Container(
-                        height: 50,
-                        color: Colors.amber,
-                        child: Center(
-                          child: Text(
-                            "delete it successfully${deleteUser.toString()}",
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
+                    );
+                  },
+                );
               },
             ),
+            // BlocBuilder<MyCubit, ResultState<User>>(
+            //   builder: (context, ResultState<User> state) {
+            //     return state.when(
+            //       idle: () {
+            //         return const Center(child: CircularProgressIndicator());
+            //       },
+            //       loading: () {
+            //         return const Center(child: CircularProgressIndicator());
+            //       },
+            //       success: (User userData) {
+            //         return Column(
+            //           children: [
+            //             Text(
+            //               "Get User",
+            //               style: TextStyle(fontSize: 18, color: Colors.black),
+            //             ),
+            //             SizedBox(height: 20),
+
+            //             Container(
+            //               height: 50,
+            //               color: Colors.amber,
+            //               child: Center(child: Text(userData.name.toString())),
+            //             ),
+            //           ],
+            //         );
+            //       },
+            //       error: (NetworkExceptions error) {
+            //         return Center(
+            //           child: Text(
+            //             NetworkExceptions.getErrorMessage(error),
+            //             style: TextStyle(color: Colors.red, fontSize: 18),
+            //           ),
+            //         );
+            //       },
+            //     );
+            //   },
+            // ),
           ],
         ),
       ),
