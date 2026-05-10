@@ -23,11 +23,12 @@ abstract class WebServices {
     @Header('Content-Type') String contentType,
   );
 
-  @DELETE('/users/{id}')
-  Future<dynamic> deleteUser(
-    @Path() int id,
-    @Header('Authorization') String token,
-  );
+ @DELETE("users/{id}")
+Future<HttpResponse<void>> deleteUser(
+  @Path("id") int id,
+  @Header("Authorization") String token,
+);
+
 }
 
 Dio createAndSetupDio() {
